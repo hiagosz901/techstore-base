@@ -78,3 +78,6 @@ Você assumiu a manutenção da TechStore, uma loja virtual em React que já est
 **Mensagem do marketing, 10 de outubro**
 
 > A campanha de frete grátis mudou: agora vale para compras acima de R$ 200 no valor final. Já recebemos reclamação de cliente que comprou uma camiseta achando que o frete era grátis. Queremos que o cliente saiba quanto falta para ganhar o frete.
+
+add commit
+
