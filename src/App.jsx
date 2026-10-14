@@ -17,6 +17,7 @@ export default function App() {
   const [carrinho, setCarrinho] = useState([])
   const [clientes, setClientes] = useState([])
   const [clienteAtualId, setClienteAtualId] = useState(null)
+  const [listaEspera, setListaEspera] = useState([])
 
   useEffect(() => {
     buscarProdutos()
@@ -31,7 +32,23 @@ export default function App() {
   }, [])
 
   function adicionarAoCarrinho(produto) {
-    setCarrinho(carrinho.concat(produto))
+    if (!produto || Number(produto.estoque) === 0 || Number(produto.price) <= 0) {
+      return
+    }
+
+    setCarrinho((atual) => [...atual, produto])
+  }
+
+  function registrarEspera(produto, nome, email) {
+    setListaEspera((atual) => [
+      ...atual,
+      {
+        produtoId: produto.id,
+        produtoTitle: produto.title,
+        nome,
+        email,
+      },
+    ])
   }
 
   function removerUmaUnidade(produtoId) {
@@ -67,7 +84,13 @@ export default function App() {
             />
             <Route
               path="/produto/:id"
-              element={<PaginaProduto produtos={produtos} onAdicionar={adicionarAoCarrinho} />}
+              element={
+                <PaginaProduto
+                  produtos={produtos}
+                  onAdicionar={adicionarAoCarrinho}
+                  onAvisarQuandoChegar={registrarEspera}
+                />
+              }
             />
             <Route
               path="/carrinho"
@@ -81,7 +104,7 @@ export default function App() {
                 />
               }
             />
-            <Route path="/estoque" element={<Estoque produtos={produtos} />} />
+            <Route path="/estoque" element={<Estoque produtos={produtos} listaEspera={listaEspera} />} />
           </Routes>
         )}
       </main>

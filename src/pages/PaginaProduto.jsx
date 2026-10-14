@@ -1,8 +1,14 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router'
+import ProdutoCard from '../components/ProdutoCard'
+import { formatarPreco } from '../utils/formatarPreco'
 
-export default function PaginaProduto({ produtos, onAdicionar }) {
+export default function PaginaProduto({ produtos, onAdicionar, onAvisarQuandoChegar }) {
   const { id } = useParams()
   const produto = produtos.find((item) => item.id === id)
+  const [nome, setNome] = useState('')
+  const [email, setEmail] = useState('')
+  const [mensagemAviso, setMensagemAviso] = useState('')
 
   if (!produto) {
     return (
@@ -15,9 +21,32 @@ export default function PaginaProduto({ produtos, onAdicionar }) {
     )
   }
 
+  const preco = Number(produto.price)
+  const podeComprar = Number(produto.estoque) > 0 && Number.isFinite(preco) && preco > 0
+
   const relacionados = produtos
-    .filter((item) => item.category === produto.category && item.id !== produto.id)
+    .filter(
+      (item) =>
+        item.category === produto.category &&
+        item.id !== produto.id &&
+        Number(item.estoque) > 0 &&
+        Number(item.price) > 0
+    )
     .slice(0, 4)
+
+  function registrarAviso(evento) {
+    evento.preventDefault()
+
+    if (!nome.trim() || !email.trim()) {
+      setMensagemAviso('Preencha nome e e-mail para receber o aviso.')
+      return
+    }
+
+    onAvisarQuandoChegar(produto, nome.trim(), email.trim())
+    setNome('')
+    setEmail('')
+    setMensagemAviso('Você foi cadastrado para receber o aviso quando o produto voltar.')
+  }
 
   return (
     <section>
@@ -37,17 +66,39 @@ export default function PaginaProduto({ produtos, onAdicionar }) {
           <p className="card-avaliacao">
             ★ {produto.rating.rate} <span>({produto.rating.count} avaliações)</span>
           </p>
-          <p className="detalhe-preco">R$ {produto.price.toFixed(2).replace('.', ',')}</p>
+          <p className="detalhe-preco">
+            {Number.isFinite(preco) && preco > 0 ? formatarPreco(preco) : 'Preço indisponível'}
+          </p>
           <p className="detalhe-descricao">{produto.description}</p>
-          <p className="detalhe-estoque">{produto.estoque} unidades disponíveis</p>
+          <p className="detalhe-estoque">
+            {produto.estoque > 0 ? `${produto.estoque} unidades disponíveis` : 'Produto esgotado'}
+          </p>
 
           <button
             className="botao botao-grande"
             onClick={() => onAdicionar(produto)}
-            disabled={produto.estoque === 0}
+            disabled={!podeComprar}
           >
-            Adicionar ao carrinho
+            {podeComprar ? 'Adicionar ao carrinho' : 'Produto indisponível'}
           </button>
+
+          {produto.estoque === 0 && (
+            <form className="form-aviso" onSubmit={registrarAviso}>
+              <h2>Avise-me quando chegar</h2>
+              <label>
+                Nome
+                <input value={nome} onChange={(evento) => setNome(evento.target.value)} />
+              </label>
+              <label>
+                E-mail
+                <input type="email" value={email} onChange={(evento) => setEmail(evento.target.value)} />
+              </label>
+              <button type="submit" className="botao botao-secundario">
+                Quero receber o aviso
+              </button>
+              {mensagemAviso && <p className="mensagem-aviso">{mensagemAviso}</p>}
+            </form>
+          )}
 
           <ul className="detalhe-garantias">
             <li>Troca grátis em até 30 dias</li>
@@ -59,18 +110,7 @@ export default function PaginaProduto({ produtos, onAdicionar }) {
       <h2>Produtos relacionados</h2>
       <div className="grade">
         {relacionados.map((item) => (
-          <article key={item.id} className="card">
-            <Link to={`/produto/${item.id}`} className="card-link">
-              <div className="card-imagem-moldura">
-                <img src={item.image} alt={item.title} className="card-imagem" />
-              </div>
-              <h3 className="card-titulo">{item.title}</h3>
-            </Link>
-            <p className="preco">R$ {Number(item.price).toFixed(2).replace('.', ',')}</p>
-            <button className="botao" onClick={() => onAdicionar(item)}>
-              Adicionar ao carrinho
-            </button>
-          </article>
+          <ProdutoCard key={item.id} produto={item} onAdicionar={onAdicionar} />
         ))}
       </div>
     </section>

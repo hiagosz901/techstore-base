@@ -395,7 +395,7 @@ h2 {
   font-size: 0.85rem;
 }
 
-.preco-original + .preco {
+.preco-original+.preco {
   color: var(--cor-destaque);
 }
 
@@ -622,7 +622,7 @@ h2 {
   padding: var(--espaco-4);
 }
 
-.item-carrinho + .item-carrinho {
+.item-carrinho+.item-carrinho {
   border-top: 1px solid var(--cor-borda);
 }
 
@@ -731,9 +731,56 @@ h2 {
   font-weight: 600;
 }
 
+.resumo-frete {
+  color: var(--cor-texto-suave);
+  font-size: 0.82rem;
+}
+
 .total {
   font-size: 1.25rem;
   font-weight: 800;
+}
+
+.form-aviso,
+.lista-espera {
+  display: grid;
+  gap: var(--espaco-3);
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: var(--espaco-4);
+}
+
+.form-aviso h2,
+.lista-espera h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.form-aviso label {
+  display: grid;
+  gap: var(--espaco-1);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.form-aviso input {
+  width: 100%;
+  padding: var(--espaco-3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  background: var(--cor-fundo);
+}
+
+.mensagem-aviso {
+  margin: 0;
+  color: var(--cor-frete);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.preco-indisponivel {
+  color: var(--cor-texto-suave);
 }
 
 .sugestoes {

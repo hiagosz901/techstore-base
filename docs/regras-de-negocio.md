@@ -1,10 +1,10 @@
 # Regras de negócio
 
-Última atualização: março de 2026
+Última atualização: outubro de 2026
 
 ## Frete grátis
 
-Produtos com preço acima de R$ 100 têm frete grátis e exibem o selo "Frete grátis".
+O frete grátis vale para compras acima de R$ 200,00 no valor final. Quando o pedido ainda não alcança esse valor, a loja mostra quanto falta para atingir a condição.
 
 ## Cupons
 
@@ -17,3 +17,7 @@ O cupom não diferencia letras maiúsculas e minúsculas.
 ## Promoções
 
 Produtos em promoção exibem o preço original riscado ao lado do preço atual.
+
+## Produtos indisponíveis
+
+Produtos sem preço definido ou sem estoque não podem ser vendidos e não aparecem na vitrine. Quando um item está esgotado, a loja oferece um formulário para o cliente solicitar aviso de disponibilidade.

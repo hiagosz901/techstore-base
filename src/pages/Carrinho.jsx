@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import SugestaoItem from '../components/SugestaoItem'
+import ProdutoCard from '../components/ProdutoCard'
 import { agruparItens, calcularTotal } from '../utils/carrinho'
 import { validarCupom } from '../utils/cupons'
 import { formatarPreco } from '../utils/formatarPreco'
@@ -13,6 +13,7 @@ export default function Carrinho({ carrinho, produtos, clienteAtual, onAdicionar
   const itens = agruparItens(carrinho)
   const total = calcularTotal(carrinho)
   const totalComDesconto = cupomAplicado ? total * (1 - cupomAplicado.desconto) : total
+  const valorFaltanteFrete = Math.max(0, 200 - totalComDesconto)
 
   const sugestoes = produtos
     .filter((produto) => !carrinho.find((item) => item.id === produto.id))
@@ -93,6 +94,13 @@ export default function Carrinho({ carrinho, produtos, clienteAtual, onAdicionar
               <span>{cupomAplicado.desconto * 100}%</span>
             </p>
           )}
+          {totalComDesconto < 200 && (
+            <p className="resumo-linha resumo-frete">
+              <span>Frete</span>
+              <span>Faltam {formatarPreco(valorFaltanteFrete)} para frete grátis</span>
+            </p>
+          )}
+          {totalComDesconto >= 200 && <p className="resumo-linha">Frete grátis</p>}
           <p className="total">
             <span>Total</span>
             <span>{formatarPreco(totalComDesconto)}</span>
@@ -101,9 +109,9 @@ export default function Carrinho({ carrinho, produtos, clienteAtual, onAdicionar
       </div>
 
       <h2>Você também pode gostar</h2>
-      <div className="sugestoes">
+      <div className="grade">
         {sugestoes.map((produto) => (
-          <SugestaoItem key={produto.id} produto={produto} onAdicionar={onAdicionar} />
+          <ProdutoCard key={produto.id} produto={produto} onAdicionar={onAdicionar} />
         ))}
       </div>
     </section>
